@@ -9,7 +9,7 @@ const db = require('../lib/db');
 
 const Problem = require('../types/Problem');
 
-router.use(auth.authenticate);
+// router.use(auth.authenticate);
 
 router.get('/:id', (req, res) => {
   const id = req.params.id;
@@ -37,13 +37,13 @@ router.get('/:id/test-cases', (req, res) => {
 });
 
 // middleware to check that the req.rookery.user.groups object contains instructor
-router.use((req, res, next) => {
-  if (req.rookery.user.groups.includes('instructors')) {
-    return next();
-  } else {
-    return res.sendStatus(401);
-  }
-});
+// router.use((req, res, next) => {
+//   if (req.rookery.user.groups.includes('instructors')) {
+//     return next();
+//   } else {
+//     return res.sendStatus(401);
+//   }
+// });
 
 router.put('/:id', (req, res) => {
   const id = req.params.id;

@@ -8,7 +8,7 @@ const auth = require('../lib/auth');
 const db = require('../lib/db');
 
 // use middleware from lib/auth to authenticate request and populate req.rookery.user.groups object
-router.use(auth.authenticate);
+// router.use(auth.authenticate);
 
 router.get('/:id', (req, res) => {
   const id = req.params.id;
@@ -21,14 +21,14 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// middleware to check that the req.rookery.user.groups object contains instructor
-router.use((req, res, next) => {
-  if (req.rookery.user.groups.includes('instructors')) {
-    return next();
-  } else {
-    return res.sendStatus(401);
-  }
-});
+// // middleware to check that the req.rookery.user.groups object contains instructor
+// router.use((req, res, next) => {
+//   if (req.rookery.user.groups.includes('instructors')) {
+//     return next();
+//   } else {
+//     return res.sendStatus(401);
+//   }
+// });
 
 router.put('/:id', (req, res) => {
   const id = req.params.id;

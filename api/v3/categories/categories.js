@@ -11,7 +11,7 @@ const Category = require('../types/Category');
 const Problem = require('../types/Problem');
 
 // use middleware from lib/auth to authenticate request and populate req.rookery.user.groups object
-router.use(auth.authenticate);
+// router.use(auth.authenticate);
 
 router.get('/', (req, res) => {
   const expand = (req.query.expand || '').split(',');
@@ -73,13 +73,13 @@ router.get('/:id/problems', (req, res) => {
 });
 
 // middleware to check that the req.rookery.user.groups object contains instructor
-router.use((req, res, next) => {
-  if (req.rookery.user.groups.includes('instructors')) {
-    return next();
-  } else {
-    return res.sendStatus(401);
-  }
-});
+// router.use((req, res, next) => {
+//   if (req.rookery.user.groups.includes('instructors')) {
+//     return next();
+//   } else {
+//     return res.sendStatus(401);
+//   }
+// });
 
 router.post('/', (req, res) => {
   const name = req.body.name;

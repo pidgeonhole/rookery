@@ -9,10 +9,10 @@ const problems = require('./problems/problems');
 const test_cases = require('./test-cases/test-cases');
 
 // middleware to create rookery namespace on request object
-router.use((req, res, next) => {
-  req.rookery = req.rookery || {};
-  next();
-});
+// router.use((req, res, next) => {
+//   req.rookery = req.rookery || {};
+//   next();
+// });
 
 router.use('/login', login);
 router.use('/categories', categories);
