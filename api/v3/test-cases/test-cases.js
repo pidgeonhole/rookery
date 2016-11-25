@@ -4,7 +4,7 @@ const debug = require('debug')('rookery:api/v3/test-cases');
 const express = require('express');
 const router = express.Router();
 
-const auth = require('../lib/auth');
+// const auth = require('../lib/auth');
 const db = require('../lib/db');
 
 // use middleware from lib/auth to authenticate request and populate req.rookery.user.groups object
