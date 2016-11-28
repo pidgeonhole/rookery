@@ -3,6 +3,7 @@
 const debug = require('debug')('rookery:api/v3/problems');
 const express = require('express');
 const router = express.Router();
+const request = require('request');
 
 // const auth = require('../lib/auth');
 const db = require('../lib/db');
@@ -33,6 +34,46 @@ router.get('/:id/test-cases', (req, res) => {
     .catch(err => {
       debug(err);
       res.sendStatus(500);
+    });
+});
+
+router.post('/:id/submissions', (req, res) => {
+  const problem_id = req.params.id;
+
+  const language = req.body.language;
+  const source_code = req.body.source_code;
+
+  if (!language || !source_code) {
+    return res.sendStatus(400);
+  }
+
+  return db.getTestCases(problem_id)
+    .then(test_cases => {
+      const job = {
+        language,
+        source_code,
+        test_cases
+      };
+
+      return new Promise((resolve, reject) => request.post({
+          uri: `${process.env.OWL_ENDPOINT}`,
+          body: job,
+          json: true
+        },
+        (err, res, body) => {
+          if (err) {
+            return reject(err);
+          } else if (res.statusCode >= 400) {
+            return reject(body);
+          } else {
+            return resolve(body);
+          }
+        }));
+    })
+    .then(result => res.json(result))
+    .catch(err => {
+      debug(err);
+      return res.sendStatus(500);
     });
 });
 
