@@ -3,6 +3,8 @@
 const express = require('express');
 const router = express.Router();
 
+const version = require('../../package.json').version;
+
 const login = require('./login/login');
 const categories = require('./categories/categories');
 const problems = require('./problems/problems');
@@ -21,7 +23,7 @@ router.use('/test-cases', test_cases);
 
 // version
 router.get('/version', (req, res) => {
-  res.type('text/plain').send('3.3.0');
+  res.type('text/plain').send(version);
 });
 
 module.exports = router;
