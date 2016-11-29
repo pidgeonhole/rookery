@@ -42,6 +42,7 @@ router.post('/:id/submissions', (req, res) => {
 
   const language = req.body.language;
   const source_code = req.body.source_code;
+  const debug = req.body.debug || false;
 
   if (!language || !source_code) {
     return res.sendStatus(400);
@@ -52,7 +53,8 @@ router.post('/:id/submissions', (req, res) => {
       const job = {
         language,
         source_code,
-        test_cases
+        test_cases,
+        debug
       };
 
       return new Promise((resolve, reject) => request.post({
