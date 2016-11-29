@@ -42,7 +42,7 @@ router.post('/:id/submissions', (req, res) => {
 
   const language = req.body.language;
   const source_code = req.body.source_code;
-  const debug_output = req.body.debug || false;
+  const debug_output = !!req.body.debug;
 
   if (!language || !source_code) {
     return res.sendStatus(400);
