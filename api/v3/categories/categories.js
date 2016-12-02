@@ -13,7 +13,7 @@ function getCategories(db, req, res) {
       categories = categories.map(category => new Category(category));
 
       if (expand.includes('problems')) {
-        categories = categories.map(category => category.expand(['problems']));
+        categories = categories.map(category => category.expand(db, ['problems']));
         return Promise.all(categories)
           .then(categories => res.json(categories));
       }
@@ -33,10 +33,14 @@ function getCategory(db, req, res) {
 
   return db.getCategory(id)
     .then(category => {
+      if (category === null) {
+        return res.sendStatus(404);
+      }
+
       category = new Category(category);
 
       if (expand.includes('problems')) {
-        return category.expand(['problems'])
+        return category.expand(db, ['problems'])
           .then(category => res.json(category));
       }
 

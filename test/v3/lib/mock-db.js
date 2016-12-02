@@ -72,7 +72,7 @@ function getCategory(id) {
     case 2:
       return Promise.resolve(mock_category(id));
     default:
-      return Promise.reject();
+      return Promise.resolve(null);
   }
 }
 
@@ -84,8 +84,9 @@ function getCategory(id) {
 function getProblems(category_id) {
   switch (category_id) {
     case 1:
-    case 2:
       return Promise.resolve([1, 2].map(id => mock_problem(id, category_id)));
+    case 2:
+      return Promise.resolve([3, 4].map(id => mock_problem(id, category_id)));
     default:
       return Promise.reject();
   }
@@ -213,6 +214,9 @@ function updateTestCase(id, problem_id, input, output, types) {
 // todo: deleting
 
 module.exports = {
+  mock_category,
+  mock_problem,
+  mock_test_case,
   getCategories,
   getCategory,
   getProblems,

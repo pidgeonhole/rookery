@@ -1,7 +1,5 @@
 "use strict";
 
-const db = require('../lib/db');
-
 const Problem = require('./Problem');
 
 class Category {
@@ -15,7 +13,7 @@ class Category {
     }
   }
 
-  expand(properties) {
+  expand(db, properties) {
     if (properties.includes('problems')) {
       return db.getProblems(this.id)
         .then(problems => {
