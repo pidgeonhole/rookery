@@ -1,10 +1,10 @@
 {
   "name": "rookery",
-  "version": "3.4.4",
+  "version": "3.5.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "mocha": "mocha"
+    "test": "mocha --recursive -u tdd"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -23,6 +23,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.6"
   }
 }

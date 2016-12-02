@@ -35,36 +35,46 @@ function newProblemSubmission(db, req, res) {
 
   const language = req.body.language;
   const source_code = req.body.source_code;
+  const name = req.body.name;
   const debug_output = !!req.body.debug;
 
-  if (!language || !source_code) {
+  if (!language || !source_code || !name) {
     return res.sendStatus(400);
   }
 
-  return db.getTestCases(problem_id)
-    .then(test_cases => {
-      const job = {
-        language,
-        source_code,
-        test_cases,
-        debug: debug_output
-      };
+  // record submission in database
+  return db.newSubmission(problem_id, name, language, source_code)
+    .then(id => db.getTestCases(problem_id)
+      .then(test_cases => {
+        const job = {
+          language,
+          source_code,
+          test_cases,
+          debug: debug_output
+        };
 
-      return new Promise((resolve, reject) => request.post({
-          uri: `${process.env.OWL_ENDPOINT}`,
-          body: job,
-          json: true
-        },
-        (err, res, body) => {
-          if (err) {
-            return reject(err);
-          } else if (res.statusCode >= 400) {
-            return reject(body);
-          } else {
-            return resolve(body);
-          }
-        }));
-    })
+        return new Promise((resolve, reject) => request.post({
+            uri: `${process.env.OWL_ENDPOINT}`,
+            body: job,
+            json: true
+          },
+          (err, res, body) => {
+            if (err) {
+              return reject(err);
+            } else if (res.statusCode >= 400) {
+              return reject(body);
+            } else {
+              return resolve(body);
+            }
+          }));
+      })
+      .then(result => {
+        // update db entry with results
+        const {num_tests, tests_passed, tests_failed, tests_errored} = result;
+        return db.updateSubmission(id, num_tests, tests_passed, tests_failed, tests_errored)
+          .then(() => result);
+      })
+    )
     .then(result => res.json(result))
     .catch(err => {
       debug(err);

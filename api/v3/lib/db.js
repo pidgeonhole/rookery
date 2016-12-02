@@ -138,6 +138,14 @@ function newTestCase(problem_id, input, output, types) {
     [problem_id, input, output, types]);
 }
 
+function newSubmission(problem_id, name, language, source_code) {
+  return db.one(`
+    INSERT INTO submissions (problem_id, name, language, source_code)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id`,
+    [problem_id, name, language, source_code]);
+}
+
 /**
  * Update an existing category
  * @param {number} id
@@ -177,6 +185,14 @@ function updateTestCase(id, problem_id, input, output, types) {
     [problem_id, input, output, types, id]);
 }
 
+function updateSubmission(id, num_tests, tests_passed, tests_failed, tests_errored) {
+  return db.none(`
+    UPDATE submissions
+    SET (num_tests, tests_passed, tests_failed, tests_errored) = ($1, $2, $3, $4)
+    WHERE id = $5`,
+    [num_tests, tests_passed, tests_failed, tests_errored, id]);
+}
+
 // todo: deleting
 
 module.exports = {
@@ -189,7 +205,9 @@ module.exports = {
   newCategory,
   newProblem,
   newTestCase,
+  newSubmission,
   updateCategory,
   updateProblem,
-  updateTestCase
+  updateTestCase,
+  updateSubmission
 };
