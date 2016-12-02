@@ -1,19 +1,11 @@
 "use strict";
 
 const debug = require('debug')('rookery:api/v3/categories');
-const express = require('express');
-const router = express.Router();
-
-// const auth = require('../lib/auth');
-const db = require('../lib/db');
 
 const Category = require('../types/Category');
 const Problem = require('../types/Problem');
 
-// use middleware from lib/auth to authenticate request and populate req.rookery.user.groups object
-// router.use(auth.authenticate);
-
-router.get('/', (req, res) => {
+function getCategories(db, req, res) {
   const expand = (req.query.expand || '').split(',');
 
   return db.getCategories()
@@ -33,9 +25,9 @@ router.get('/', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-router.get('/:id', (req, res) => {
+function getCategory(db, req, res) {
   const id = req.params.id;
   const expand = (req.query.expand || '').split(',');
 
@@ -55,9 +47,9 @@ router.get('/:id', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-router.get('/:id/problems', (req, res) => {
+function getCategoryProblems(db, req, res) {
   const category_id = req.params.id;
 
   return db.getProblems(category_id)
@@ -70,18 +62,9 @@ router.get('/:id/problems', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-// middleware to check that the req.rookery.user.groups object contains instructor
-// router.use((req, res, next) => {
-//   if (req.rookery.user.groups.includes('instructors')) {
-//     return next();
-//   } else {
-//     return res.sendStatus(401);
-//   }
-// });
-
-router.post('/', (req, res) => {
+function newCategory(db, req, res) {
   const name = req.body.name;
   const description = req.body.description;
 
@@ -99,9 +82,9 @@ router.post('/', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-router.put('/:id', (req, res) => {
+function editCategory(db, req, res) {
   const id = req.params.id;
   const name = req.body.name;
   const description = req.body.description;
@@ -116,9 +99,9 @@ router.put('/:id', (req, res) => {
       debug(err);
       res.sendStatus(500);
     });
-});
+}
 
-router.post('/:id/problems', (req, res) => {
+function newProblem(db, req, res) {
   const category_id = req.params.id;
   const title = req.body.title;
   const description = req.body.description;
@@ -136,6 +119,13 @@ router.post('/:id/problems', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-module.exports = router;
+module.exports = {
+  getCategories,
+  getCategory,
+  getCategoryProblems,
+  newCategory,
+  editCategory,
+  newProblem
+};

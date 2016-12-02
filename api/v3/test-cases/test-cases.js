@@ -1,16 +1,8 @@
 "use strict";
 
 const debug = require('debug')('rookery:api/v3/test-cases');
-const express = require('express');
-const router = express.Router();
 
-// const auth = require('../lib/auth');
-const db = require('../lib/db');
-
-// use middleware from lib/auth to authenticate request and populate req.rookery.user.groups object
-// router.use(auth.authenticate);
-
-router.get('/:id', (req, res) => {
+function getTestCase(db, req, res) {
   const id = req.params.id;
 
   return db.getTestCase(id)
@@ -19,18 +11,9 @@ router.get('/:id', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-// // middleware to check that the req.rookery.user.groups object contains instructor
-// router.use((req, res, next) => {
-//   if (req.rookery.user.groups.includes('instructors')) {
-//     return next();
-//   } else {
-//     return res.sendStatus(401);
-//   }
-// });
-
-router.put('/:id', (req, res) => {
+function editTestCase(db, req, res) {
   const id = req.params.id;
   const {problem_id, input, output, types} = req.body;
 
@@ -44,6 +27,9 @@ router.put('/:id', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-module.exports = router;
+module.exports = {
+  getTestCase,
+  editTestCase
+};

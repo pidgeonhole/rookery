@@ -6,9 +6,9 @@ const router = express.Router();
 const version = require('../../package.json').version;
 
 const login = require('./login/login');
-const categories = require('./categories/categories');
-const problems = require('./problems/problems');
-const test_cases = require('./test-cases/test-cases');
+const categories = require('./categories/router');
+const problems = require('./problems/router');
+const test_cases = require('./test-cases/router');
 
 // middleware to create rookery namespace on request object
 // router.use((req, res, next) => {

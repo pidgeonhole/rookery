@@ -1,18 +1,11 @@
 "use strict";
 
 const debug = require('debug')('rookery:api/v3/problems');
-const express = require('express');
-const router = express.Router();
 const request = require('request');
-
-// const auth = require('../lib/auth');
-const db = require('../lib/db');
 
 const Problem = require('../types/Problem');
 
-// router.use(auth.authenticate);
-
-router.get('/:id', (req, res) => {
+function getProblem(db, req, res) {
   const id = req.params.id;
 
   return db.getProblem(id)
@@ -24,9 +17,9 @@ router.get('/:id', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-router.get('/:id/test-cases', (req, res) => {
+function getProblemTestCases(db, req, res) {
   const problem_id = req.params.id;
 
   return db.getTestCases(problem_id)
@@ -35,9 +28,9 @@ router.get('/:id/test-cases', (req, res) => {
       debug(err);
       res.sendStatus(500);
     });
-});
+}
 
-router.post('/:id/submissions', (req, res) => {
+function newProblemSubmission(db, req, res) {
   const problem_id = req.params.id;
 
   const language = req.body.language;
@@ -77,18 +70,9 @@ router.post('/:id/submissions', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-// middleware to check that the req.rookery.user.groups object contains instructor
-// router.use((req, res, next) => {
-//   if (req.rookery.user.groups.includes('instructors')) {
-//     return next();
-//   } else {
-//     return res.sendStatus(401);
-//   }
-// });
-
-router.put('/:id', (req, res) => {
+function editProblem(db, req, res) {
   const id = req.params.id;
   const category_id = req.body.category_id;
   const title = req.body.title;
@@ -104,9 +88,9 @@ router.put('/:id', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-router.post('/:id/test-cases', (req, res) => {
+function newTestCase(db, req, res) {
   const problem_id = req.params.id;
   const input = req.body.input;
   const output = req.body.output;
@@ -122,6 +106,12 @@ router.post('/:id/test-cases', (req, res) => {
       debug(err);
       return res.sendStatus(500);
     });
-});
+}
 
-module.exports = router;
+module.exports = {
+  getProblem,
+  getProblemTestCases,
+  newProblemSubmission,
+  editProblem,
+  newTestCase
+};
