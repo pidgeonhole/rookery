@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "mocha --recursive -u tdd",
-    "coverage": "istanbul cover _mocha -i api/**/*.js -- --recursive -u tdd"
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -i api/**/*.js -- --recursive -u tdd",
+    "circle-test": "istanbul cover node_modules/mocha/bin/_mocha -i api/**/*.js --dir $CIRCLE_ARTIFACTS -- --recursive -u tdd --reporter mocha-junit-reporter"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -27,6 +28,7 @@
     "chai-as-promised": "^6.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
+    "mocha-junit-reporter": "^1.12.1",
     "sinon": "^1.17.6"
   },
   "config": {
