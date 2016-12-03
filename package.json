@@ -1,10 +1,11 @@
 {
   "name": "rookery",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha --recursive -u tdd"
+    "test": "mocha --recursive -u tdd",
+    "coverage": "istanbul cover _mocha -i api/**/*.js -- --recursive -u tdd"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -21,9 +22,16 @@
     "stormpath": "^0.19.0"
   },
   "devDependencies": {
+    "blanket": "^1.2.3",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "sinon": "^1.17.6"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "api/**"
+    }
   }
 }

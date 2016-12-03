@@ -6,13 +6,13 @@ const Category = require('../types/Category');
 const Problem = require('../types/Problem');
 
 function getCategories(db, req, res) {
-  const expand = (req.query.expand || '').split(',');
+  const expand = req.query.expand ? req.query.expand.split(',') : null;
 
   return db.getCategories()
     .then(categories => {
       categories = categories.map(category => new Category(category));
 
-      if (expand.includes('problems')) {
+      if (expand && expand.includes('problems')) {
         categories = categories.map(category => category.expand(db, ['problems']));
         return Promise.all(categories)
           .then(categories => res.json(categories));
@@ -117,6 +117,7 @@ function newProblem(db, req, res) {
   return db.newProblem(category_id, title, description)
     .then(problem => {
       problem = new Problem(problem);
+      res.status(201);
       return res.json(problem);
     })
     .catch(err => {

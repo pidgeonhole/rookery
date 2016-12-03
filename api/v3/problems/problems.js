@@ -10,6 +10,10 @@ function getProblem(db, req, res) {
 
   return db.getProblem(id)
     .then(problem => {
+      if (problem === null) {
+        return res.sendStatus(404);
+      }
+
       problem = new Problem(problem);
       return res.json(problem);
     })

@@ -58,7 +58,7 @@ const mock_test_case = function(id, problem_id) {
  * @return {Promise.<Category[]>}
  */
 function getCategories() {
-  return Promise.resolve([1, 2].map(id => mock_category(id)));
+  return Promise.resolve([1, 2, 3].map(id => mock_category(id)));
 }
 
 /**
@@ -70,6 +70,7 @@ function getCategory(id) {
   switch (id) {
     case 1:
     case 2:
+    case 3:
       return Promise.resolve(mock_category(id));
     default:
       return Promise.resolve(null);
@@ -87,6 +88,8 @@ function getProblems(category_id) {
       return Promise.resolve([1, 2].map(id => mock_problem(id, category_id)));
     case 2:
       return Promise.resolve([3, 4].map(id => mock_problem(id, category_id)));
+    case 3:
+      return Promise.resolve([]);
     default:
       return Promise.reject();
   }
@@ -106,7 +109,7 @@ function getProblem(id) {
     case 4:
       return Promise.resolve(mock_problem(id, 2));
     default:
-      return Promise.reject();
+      return Promise.resolve(null);
   }
 }
 
@@ -117,7 +120,7 @@ function getTestCases(problem_id) {
     case 2:
       return Promise.resolve([3, 4].map(id => mock_test_case(id, problem_id)));
     default:
-      return Promise.reject();
+      return Promise.resolve([]);
   }
 }
 
@@ -142,7 +145,7 @@ function getTestCase(id) {
  */
 function newCategory(name, description) {
   if (name && description) {
-    return Promise.resolve(mock_category(3));
+    return Promise.resolve(mock_category(4));
   } else {
     return Promise.reject();
   }
@@ -158,7 +161,12 @@ function newCategory(name, description) {
  */
 function newProblem(category_id, title, description) {
   if (category_id && title && description) {
-    return Promise.resolve(mock_problem(5));
+    return Promise.resolve({
+      id: 5,
+      category_id,
+      title,
+      description
+    });
   } else {
     return Promise.reject();
   }
