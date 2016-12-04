@@ -1,7 +1,6 @@
 "use strict";
 
 const debug = require('debug')('rookery:api/v3/problems');
-const request = require('request');
 
 const Problem = require('../types/Problem');
 
@@ -27,10 +26,41 @@ function getProblemTestCases(db, req, res) {
   const problem_id = req.params.id;
 
   return db.getTestCases(problem_id)
-    .then(test_cases => res.json(test_cases))
+    .then(test_cases => {
+      if (test_cases.length === 0) {
+        return res.sendStatus(404);
+      }
+
+      if (test_cases.length === 1 && test_cases[0].id === null) {
+        return res.json([]);
+      }
+
+      res.json(test_cases)
+    })
     .catch(err => {
       debug(err);
       res.sendStatus(500);
+    });
+}
+
+function getProblemSubmissions(db, req, res) {
+  const problem_id = req.params.id;
+
+  return db.getTopNamesForProblem(problem_id)
+    .then(results => {
+      if (results.length === 0) {
+        return res.sendStatus(404);
+      }
+
+      if (results.length === 1 && results[0].id === null) {
+        return res.json([]);
+      }
+
+      return res.json(results);
+    })
+    .catch(err => {
+      debug(err);
+      return res.sendStatus(500);
     });
 }
 
@@ -67,6 +97,10 @@ function newProblemSubmission(db, owl, req, res) {
       return res.json(result);
     })
     .catch(err => {
+      if (err.code === '23503') {
+        return res.sendStatus(404);
+      }
+
       debug(err);
       return res.sendStatus(500);
     });
@@ -83,7 +117,13 @@ function editProblem(db, req, res) {
   }
 
   return db.updateProblem(id, category_id, title, description)
-    .then(() => res.sendStatus(200))
+    .then(result => {
+      if (result.rowCount === 0) {
+        return res.sendStatus(404);
+      }
+
+      return res.sendStatus(200);
+    })
     .catch(err => {
       debug(err);
       return res.sendStatus(500);
@@ -114,6 +154,7 @@ function newTestCase(db, req, res) {
 module.exports = {
   getProblem,
   getProblemTestCases,
+  getProblemSubmissions,
   newProblemSubmission,
   editProblem,
   newTestCase

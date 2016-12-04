@@ -121,6 +121,72 @@ suite('problems', function () {
     });
   });
 
+  suite('getProblemSubmissions', function () {
+    test('get submissions for existing problem with submissions', function () {
+      const req = {params: {id: 1}};
+
+      const spy = sinon.spy();
+      const res = {json: spy};
+
+      return problems.getProblemSubmissions(db, req, res)
+        .then(() => {
+          assert.isTrue(spy.calledOnce, 'res.json should have been called once');
+
+          const actual = spy.args[0][0];
+          const expected = [
+            {
+              id: 1,
+              problem_id: 1,
+              name: `submission-1-name`,
+              time_received: `submission-1-time-received`,
+              num_tests: `submission-1-num-tests`,
+              tests_passed: `submission-1-tests-passed`,
+              tests_failed: `submission-1-tests-failed`,
+              tests_errored: `submission-1-tests-errored`
+            },
+            {
+              id: 2,
+              problem_id: 1,
+              name: `submission-2-name`,
+              time_received: `submission-2-time-received`,
+              num_tests: `submission-2-num-tests`,
+              tests_passed: `submission-2-tests-passed`,
+              tests_failed: `submission-2-tests-failed`,
+              tests_errored: `submission-2-tests-errored`
+            }
+          ];
+
+          assert.deepEqual(actual, expected);
+        });
+    });
+
+    test('get submissions for existing problem without submissions', function () {
+      const req = {params: {id: 2}};
+
+      const spy = sinon.spy();
+      const res = {json: spy};
+
+      return problems.getProblemSubmissions(db, req, res)
+        .then(() => {
+          assert.isTrue(spy.calledOnce, 'res.json should have been called once');
+          assert.deepEqual(spy.args[0][0], []);
+        });
+    });
+
+    test('get submissions for nonexistent problem', function () {
+      const req = {params: {id: 6}};
+
+      const spy = sinon.spy();
+      const res = {sendStatus: spy};
+
+      return problems.getProblemSubmissions(db, req, res)
+        .then(() => {
+          assert.isTrue(spy.calledOnce, 'res.json should have been called once');
+          assert.strictEqual(spy.args[0][0], 404, 'res.json should have been called with status 404');
+        });
+    });
+  });
+
   suite('newSubmission', function () {
     test('submit an answer to an existing problem', function () {
       const req = {

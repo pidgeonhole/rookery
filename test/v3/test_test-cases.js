@@ -34,7 +34,7 @@ suite('test-cases', function () {
     });
 
     test('get nonexistent test case', function () {
-      const req = {params: {id: 6}};
+      const req = {params: {id: 7}};
 
       const spy = sinon.spy();
       const res = {sendStatus: spy};
@@ -71,7 +71,7 @@ suite('test-cases', function () {
 
     test('edit nonexistent test case', function () {
       const req = {
-        params: {id: 6},
+        params: {id: 7},
         body: {
           problem_id: 1,
           input: 'test-case-1-input',

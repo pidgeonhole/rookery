@@ -17,6 +17,11 @@ class Category {
     if (properties.includes('problems')) {
       return db.getProblems(this.id)
         .then(problems => {
+          if (problems.length === 1 && problems[0].id === null) {
+            this.problems = [];
+            return this;
+          }
+
           problems = problems.map(problem => new Problem(problem));
           this.problems = problems;
           return this;

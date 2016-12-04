@@ -58,6 +58,14 @@ function getCategoryProblems(db, req, res) {
 
   return db.getProblems(category_id)
     .then(problems => {
+      if (problems.length === 0) {
+        return res.sendStatus(404);
+      }
+
+      if (problems.length === 1 && problems[0].id === null) {
+        return res.json([]);
+      }
+
       problems = problems.map(problem => new Problem(problem));
       return res.json(problems);
     })
@@ -98,7 +106,13 @@ function editCategory(db, req, res) {
   }
 
   return db.updateCategory(id, name, description)
-    .then(() => res.sendStatus(200))
+    .then(result => {
+      if (result.rowCount === 0) {
+        return res.sendStatus(404);
+      }
+
+      return res.sendStatus(200);
+    })
     .catch(err => {
       debug(err);
       res.sendStatus(500);
