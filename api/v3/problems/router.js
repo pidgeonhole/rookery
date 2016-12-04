@@ -14,6 +14,8 @@ router.get('/:id', (req, res) => problems.getProblem(db, req, res));
 
 router.get('/:id/test-cases', (req, res) => problems.getProblemTestCases(db, req, res));
 
+router.get('/:id/submissions', (req, res) => problems.getProblemSubmissions(db, req, res));
+
 router.post('/:id/submissions', (req, res) => problems.newProblemSubmission(db, owl, req, res));
 
 // middleware to check that the req.rookery.user.groups object contains instructor

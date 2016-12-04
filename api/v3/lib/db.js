@@ -66,9 +66,9 @@ function getCategory(id) {
  */
 function getProblems(category_id) {
   return db.any(`
-    SELECT id, category_id, title, description
-    FROM problems 
-    WHERE category_id = $1`,
+    SELECT p.id, c.id as category_id, p.title, p.description
+    FROM categories as c LEFT OUTER JOIN problems as p ON c.id = p.category_id
+    WHERE c.id = $1`,
     category_id);
 }
 
@@ -87,9 +87,9 @@ function getProblem(id) {
 
 function getTestCases(problem_id) {
   return db.any(`
-    SELECT id, problem_id, input, output, types
-    FROM test_cases
-    WHERE problem_id = $1`,
+    SELECT t.id, p.id as problem_id, t.input, t.output, t.types
+    FROM problems as p LEFT OUTER JOIN test_cases as t ON p.id = t.problem_id
+    WHERE p.id = $1`,
     problem_id);
 }
 
@@ -99,6 +99,26 @@ function getTestCase(id) {
     FROM test_cases
     WHERE id = $1`,
     id);
+}
+
+function getTopNamesForProblem(problem_id) {
+  return db.any(`
+    SELECT DISTINCT ON (s.name) 
+      s.id AS id,
+      p.id AS problem_id,
+      s.name,
+      s.time_received,
+      s.num_tests,
+      s.tests_passed,
+      s.tests_failed,
+      s.tests_errored
+    FROM problems AS p
+    LEFT OUTER JOIN submissions AS s ON p.id = s.problem_id
+    WHERE p.id = $1
+    ORDER BY s.name,
+             s.time_received,
+             s.tests_passed DESC`,
+    problem_id);
 }
 
 /**
@@ -154,7 +174,7 @@ function newSubmission(problem_id, name, language, source_code) {
  * @return {Promise}
  */
 function updateCategory(id, name, description) {
-  return db.none(`
+  return db.result(`
     UPDATE categories
     SET (name, description) = ($1, $2)
     WHERE id = $3`,
@@ -170,7 +190,7 @@ function updateCategory(id, name, description) {
  * @return {Promise}
  */
 function updateProblem(id, category_id, title, description) {
-  return db.none(`
+  return db.result(`
     UPDATE problems
     SET (category_id, title, description) = ($1, $2, $3)
     WHERE id = $4`,
@@ -202,6 +222,7 @@ module.exports = {
   getProblem,
   getTestCases,
   getTestCase,
+  getTopNamesForProblem,
   newCategory,
   newProblem,
   newTestCase,

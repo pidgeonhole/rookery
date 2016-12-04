@@ -53,6 +53,19 @@ const mock_test_case = function(id, problem_id) {
   };
 };
 
+const mock_submission = function (id, problem_id) {
+  return {
+    id,
+    problem_id,
+    name: `submission-${id}-name`,
+    time_received: `submission-${id}-time-received`,
+    num_tests: `submission-${id}-num-tests`,
+    tests_passed: `submission-${id}-tests-passed`,
+    tests_failed: `submission-${id}-tests-failed`,
+    tests_errored: `submission-${id}-tests-errored`
+  };
+};
+
 /**
  * Get categories from the database
  * @return {Promise.<Category[]>}
@@ -89,9 +102,12 @@ function getProblems(category_id) {
     case 2:
       return Promise.resolve([3, 4].map(id => mock_problem(id, category_id)));
     case 3:
-      return Promise.resolve([]);
+      return Promise.resolve([{
+        id: null,
+        category_id: 3
+      }]);
     default:
-      return Promise.reject();
+      return Promise.resolve([]);
   }
 }
 
@@ -122,7 +138,10 @@ function getTestCases(problem_id) {
     case 3:
       return Promise.resolve([5, 6]).map(id => mock_test_case(id, problem_id));
     case 4:
-      return Promise.resolve([]);
+      return Promise.resolve([{
+        id: null,
+        problem_id: 4
+      }]);
     default:
       return Promise.resolve([]);
   }
@@ -136,8 +155,25 @@ function getTestCase(id) {
     case 3:
     case 4:
       return Promise.resolve(mock_test_case(id, 2));
+    case 5:
+    case 6:
+      return Promise.resolve(mock_test_case(id, 3));
     default:
       return Promise.resolve(null);
+  }
+}
+
+function getTopNamesForProblem(problem_id) {
+  switch (problem_id) {
+    case 1:
+      return Promise.resolve([1, 2].map(id => mock_submission(id, problem_id)));
+    case 2:
+      return Promise.resolve([{
+        problem_id: 2,
+        id: null
+      }]);
+    default:
+      return Promise.resolve([]);
   }
 }
 
@@ -185,10 +221,18 @@ function newTestCase(problem_id, input, output, types) {
 }
 
 function newSubmission(problem_id, name, language, source_code) {
-  return Promise.resolve({
-    id: 1,
-    time_received: new Date(0).toISOString()
-  });
+  switch (problem_id) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+      return Promise.resolve({
+        id: 1,
+        time_received: new Date(0).toISOString()
+      });
+    default:
+      return Promise.reject({code: '23503'});
+  }
 }
 
 /**
@@ -200,7 +244,14 @@ function newSubmission(problem_id, name, language, source_code) {
  */
 function updateCategory(id, name, description) {
   if (id && name && description) {
-    return Promise.resolve();
+    switch (id) {
+      case 1:
+      case 2:
+      case 3:
+        return Promise.resolve({rowCount: 1});
+      default:
+        return Promise.resolve({rowCount: 0});
+    }
   } else {
     return Promise.reject();
   }
@@ -216,7 +267,15 @@ function updateCategory(id, name, description) {
  */
 function updateProblem(id, category_id, title, description) {
   if (id && category_id && title && description) {
-    return Promise.resolve();
+    switch (id) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        return Promise.resolve({rowCount: 1});
+      default:
+        return Promise.resolve({rowCount: 0});
+    }
   } else {
     return Promise.reject();
   }
@@ -224,8 +283,17 @@ function updateProblem(id, category_id, title, description) {
 
 function updateTestCase(id, problem_id, input, output, types) {
   if (id && problem_id && input && output && types) {
-    return Promise.resolve();
-  } else {
+    switch (id) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+        return Promise.resolve({rowCount: 1});
+      default:
+        return Promise.resolve({rowCount: 0});
+    }  } else {
     return Promise.reject();
   }
 }
@@ -246,6 +314,7 @@ module.exports = {
   getProblem,
   getTestCases,
   getTestCase,
+  getTopNamesForProblem,
   newCategory,
   newProblem,
   newTestCase,

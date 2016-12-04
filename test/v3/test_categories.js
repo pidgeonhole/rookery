@@ -430,7 +430,6 @@ suite('categories', function () {
 
           assert.deepEqual(actual, expected);
         })
-
     });
   });
 });

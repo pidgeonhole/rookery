@@ -28,7 +28,13 @@ function editTestCase(db, req, res) {
   }
 
   return db.updateTestCase(id, problem_id, input, output, types)
-    .then(() => res.sendStatus(200))
+    .then(result => {
+      if (result.rowCount === 0) {
+        return res.sendStatus(404);
+      }
+
+      return res.sendStatus(200);
+    })
     .catch(err => {
       debug(err);
       return res.sendStatus(500);
