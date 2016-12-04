@@ -116,8 +116,8 @@ function getTopNamesForProblem(problem_id) {
     LEFT OUTER JOIN submissions AS s ON p.id = s.problem_id
     WHERE p.id = $1
     ORDER BY s.name,
-             s.time_received,
-             s.tests_passed DESC`,
+             s.tests_passed DESC,
+             s.time_received DESC`,
     problem_id);
 }
 
