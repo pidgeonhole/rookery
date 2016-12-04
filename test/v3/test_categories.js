@@ -307,10 +307,6 @@ suite('categories', function () {
         });
     });
 
-    test('list problems for an existing category without problems without expansion', function () {
-      assert.fail('not implemented');
-    });
-
     test('list problems for nonexistent category', function () {
       const req = {
         params: {id: 4},

@@ -142,7 +142,7 @@ function newSubmission(problem_id, name, language, source_code) {
   return db.one(`
     INSERT INTO submissions (problem_id, name, language, source_code)
     VALUES ($1, $2, $3, $4)
-    RETURNING id`,
+    RETURNING id, time_received`,
     [problem_id, name, language, source_code]);
 }
 

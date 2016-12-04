@@ -6,7 +6,13 @@ function getTestCase(db, req, res) {
   const id = req.params.id;
 
   return db.getTestCase(id)
-    .then(test_case => res.json(test_case))
+    .then(test_case => {
+      if (test_case === null) {
+        return res.sendStatus(404);
+      }
+
+      res.json(test_case)
+    })
     .catch(err => {
       debug(err);
       return res.sendStatus(500);

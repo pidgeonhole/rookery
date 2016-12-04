@@ -47,7 +47,7 @@ const mock_test_case = function(id, problem_id) {
   return {
     id,
     problem_id,
-    input: `test-case-${id}_input`,
+    input: `test-case-${id}-input`,
     output: `test-case-${id}-output`,
     types: `test-case-${id}-types`
   };
@@ -119,6 +119,10 @@ function getTestCases(problem_id) {
       return Promise.resolve([1, 2].map(id => mock_test_case(id, problem_id)));
     case 2:
       return Promise.resolve([3, 4].map(id => mock_test_case(id, problem_id)));
+    case 3:
+      return Promise.resolve([5, 6]).map(id => mock_test_case(id, problem_id));
+    case 4:
+      return Promise.resolve([]);
     default:
       return Promise.resolve([]);
   }
@@ -133,7 +137,7 @@ function getTestCase(id) {
     case 4:
       return Promise.resolve(mock_test_case(id, 2));
     default:
-      return Promise.reject();
+      return Promise.resolve(null);
   }
 }
 
@@ -174,10 +178,17 @@ function newProblem(category_id, title, description) {
 
 function newTestCase(problem_id, input, output, types) {
   if (problem_id && input && output && types) {
-    return Promise.resolve();
+    return Promise.resolve(mock_test_case(5, problem_id));
   } else {
     return Promise.reject();
   }
+}
+
+function newSubmission(problem_id, name, language, source_code) {
+  return Promise.resolve({
+    id: 1,
+    time_received: new Date(0).toISOString()
+  });
 }
 
 /**
@@ -219,6 +230,10 @@ function updateTestCase(id, problem_id, input, output, types) {
   }
 }
 
+function updateSubmission(id, num_tests, tests_passed, tests_failed, tests_errored) {
+  return Promise.resolve();
+}
+
 // todo: deleting
 
 module.exports = {
@@ -234,7 +249,9 @@ module.exports = {
   newCategory,
   newProblem,
   newTestCase,
+  newSubmission,
   updateCategory,
   updateProblem,
-  updateTestCase
+  updateTestCase,
+  updateSubmission
 };

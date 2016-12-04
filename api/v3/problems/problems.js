@@ -34,7 +34,7 @@ function getProblemTestCases(db, req, res) {
     });
 }
 
-function newProblemSubmission(db, req, res) {
+function newProblemSubmission(db, owl, req, res) {
   const problem_id = req.params.id;
 
   const language = req.body.language;
@@ -48,38 +48,24 @@ function newProblemSubmission(db, req, res) {
 
   // record submission in database
   return db.newSubmission(problem_id, name, language, source_code)
-    .then(id => db.getTestCases(problem_id)
-      .then(test_cases => {
-        const job = {
-          language,
-          source_code,
-          test_cases,
-          debug: debug_output
-        };
-
-        return new Promise((resolve, reject) => request.post({
-            uri: `${process.env.OWL_ENDPOINT}`,
-            body: job,
-            json: true
-          },
-          (err, res, body) => {
-            if (err) {
-              return reject(err);
-            } else if (res.statusCode >= 400) {
-              return reject(body);
-            } else {
-              return resolve(body);
-            }
-          }));
-      })
-      .then(result => {
+    .then(submission_result => db.getTestCases(problem_id)
+      .then(test_cases => owl.newJob(language, source_code, test_cases, debug_output))
+      .then(response => {
         // update db entry with results
-        const {num_tests, tests_passed, tests_failed, tests_errored} = result;
-        return db.updateSubmission(id, num_tests, tests_passed, tests_failed, tests_errored)
-          .then(() => result);
+        const {num_tests, tests_passed, tests_failed, tests_errored} = response;
+        return db.updateSubmission(submission_result.id, num_tests, tests_passed, tests_failed, tests_errored)
+          .then(() => {
+            response.name = name;
+            response.language = language;
+            response.time_received = submission_result.time_received;
+            return response;
+          });
       })
     )
-    .then(result => res.json(result))
+    .then(result => {
+      res.status(201);
+      return res.json(result);
+    })
     .catch(err => {
       debug(err);
       return res.sendStatus(500);
@@ -115,7 +101,10 @@ function newTestCase(db, req, res) {
   }
 
   return db.newTestCase(problem_id, input, output, types)
-    .then(test_case => res.json(test_case))
+    .then(test_case => {
+      res.status(201);
+      return res.json(test_case);
+    })
     .catch(err => {
       debug(err);
       return res.sendStatus(500);
