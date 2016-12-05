@@ -103,21 +103,23 @@ function getTestCase(id) {
 
 function getTopNamesForProblem(problem_id) {
   return db.any(`
-    SELECT DISTINCT ON (s.name) 
-      s.id AS id,
-      p.id AS problem_id,
-      s.name,
-      s.time_received,
-      s.num_tests,
-      s.tests_passed,
-      s.tests_failed,
-      s.tests_errored
-    FROM problems AS p
-    LEFT OUTER JOIN submissions AS s ON p.id = s.problem_id
-    WHERE p.id = $1
-    ORDER BY s.name,
-             s.tests_passed DESC,
-             s.time_received DESC`,
+    SELECT a.*
+    FROM
+      ( SELECT DISTINCT ON (s.name) s.id AS id,
+                           p.id AS problem_id,
+                           s.name,
+                           s.time_received,
+                           s.num_tests,
+                           s.tests_passed,
+                           s.tests_failed,
+                           s.tests_errored
+       FROM problems AS p
+       LEFT OUTER JOIN submissions AS s ON p.id = s.problem_id
+       WHERE p.id = 4
+       ORDER BY s.name,
+                s.tests_passed DESC) AS a
+    ORDER BY a.tests_passed DESC,
+             a.time_received ASC`,
     problem_id);
 }
 
