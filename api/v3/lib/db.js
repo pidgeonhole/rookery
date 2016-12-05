@@ -115,7 +115,7 @@ function getTopNamesForProblem(problem_id) {
                            s.tests_errored
        FROM problems AS p
        LEFT OUTER JOIN submissions AS s ON p.id = s.problem_id
-       WHERE p.id = 4
+       WHERE p.id = $1
        ORDER BY s.name,
                 s.tests_passed DESC) AS a
     ORDER BY a.tests_passed DESC,
