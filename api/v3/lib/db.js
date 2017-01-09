@@ -123,6 +123,21 @@ function getTopNamesForProblem(problem_id) {
     problem_id);
 }
 
+function getEvents() {
+  return db.any(`
+    SELECT id, name
+    FROM events`);
+}
+
+function getEvent(id) {
+  return db.oneOrNone(`
+    SELECT id, name
+    FROM events
+    WHERE id = $1`,
+    id
+  );
+}
+
 /**
  * Create a new category
  * @param {string} name
@@ -166,6 +181,14 @@ function newSubmission(problem_id, name, language, source_code) {
     VALUES ($1, $2, $3, $4)
     RETURNING id, time_received`,
     [problem_id, name, language, source_code]);
+}
+
+function newEvent(name) {
+  return db.one(`
+    INSERT INTO events (name)
+    VALUES ($1)
+    RETURNING id, name`,
+    name);
 }
 
 /**
@@ -225,10 +248,13 @@ module.exports = {
   getTestCases,
   getTestCase,
   getTopNamesForProblem,
+  getEvents,
+  getEvent,
   newCategory,
   newProblem,
   newTestCase,
   newSubmission,
+  newEvent,
   updateCategory,
   updateProblem,
   updateTestCase,

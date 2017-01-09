@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1= category.name
+    p= category.description
+
+    h2 Problems
+    each problem in problems
+        div
+            a(href='/crud/problems/' + problem.id)= problem.title
