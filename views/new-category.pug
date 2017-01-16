@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    a(href='/crud/categories')= 'back'
+    h1= title
+    form(name='new-category', method='post', action='/crud/categories/new')
+        div
+            span Name
+            input(type='text', name='name')
+        div
+            span Description
+            textarea(name='description')
+        div
+            input(type='submit', value='submit')

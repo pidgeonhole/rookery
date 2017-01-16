@@ -47,6 +47,16 @@ function getCategories() {
 }
 
 /**
+ * Get only category names and ids from the database
+ * @return {Promise}
+ */
+function listCategories() {
+  return db.any(`
+    SELECT id, name
+    FROM categories`);
+}
+
+/**
  * Retrieve a particular category
  * @param {number} id
  * @return {Promise.<Category>}
@@ -242,6 +252,7 @@ function updateSubmission(id, num_tests, tests_passed, tests_failed, tests_error
 
 module.exports = {
   getCategories,
+  listCategories,
   getCategory,
   getProblems,
   getProblem,

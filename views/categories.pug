@@ -2,6 +2,8 @@ extends layout
 
 block content
     h1= title
+    a(href='/crud/categories/new')
+        p= 'new'
     each category in categories
         a(href='/crud/categories/' + category.id)
             h2= category.name

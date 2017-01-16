@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    a(href='/crud/categories/' + category.id)= 'back'
+    h1= category.name
+    form(name='edit-category', method='post', action='/crud/categories/' + category.id + '/update')
+        div
+            span Name
+            input(type='text', name='name', value=category.name)
+        div
+            span Description
+            textarea(name='description')=category.description
+        div
+            input(type='submit', value='submit')
