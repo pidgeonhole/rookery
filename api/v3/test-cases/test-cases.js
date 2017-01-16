@@ -2,6 +2,33 @@
 
 const debug = require('debug')('rookery:api/v3/test-cases');
 
+function newTestCase(db, req, res) {
+  const {problem_id, input, output, types} = req.body;
+
+  if (!problem_id || !input || !output || !types) {
+    return res.sendStatus(400);
+  }
+
+  return db.newTestCase(problem_id, input, output, types)
+    .then(_ => res.sendStatus(201))
+
+    .catch(err => {
+      debug(err);
+      res.sendStatus(500);
+    });
+}
+
+function newTestCases(db, req, res) {
+  const new_test_cases = req.body;
+
+  return db.newTestCases(new_test_cases)
+    .then(_ => res.sendStatus(201))
+    .catch(err => {
+      debug(err);
+      return res.sendStatus(400);
+    });
+}
+
 function getTestCase(db, req, res) {
   const id = req.params.id;
 
@@ -43,5 +70,7 @@ function editTestCase(db, req, res) {
 
 module.exports = {
   getTestCase,
+  newTestCase,
+  newTestCases,
   editTestCase
 };
