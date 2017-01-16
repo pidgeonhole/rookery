@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    a(href='/crud/categories/' + category.id)=category.name
+    h1= problem.title
+    a(href='/crud/problems/' + problem.id + '/edit')= 'edit'
+    p= problem.description
+
+    h2 Test Cases
+    a(href='/crud/problems/' + id + '/test-cases/new')='new'
+    if !(test_cases.length === 1 && test_cases[0].id === null)
+        each test_case in test_cases
+            h3
+                a(href='/crud/test-cases/' + test_case.id)='Test Case ' + test_case.id

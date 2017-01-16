@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    a(href='/crud/problems/' + problem_id)='back'
+    h1= title
+    p='problem_id: ' + problem_id
+    form(name='new-test-case', method='post', action='/crud/problems/' + problem_id + '/test-cases/new')
+        div
+            span Input
+            textarea(name='input')
+        div
+            span Output
+            textarea(name='output')
+        div
+            span Types
+            input(type='text', name='types')
+        div
+            input(type='submit', value='submit')

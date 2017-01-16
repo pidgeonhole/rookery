@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    a(href='/crud/problems/' + problem.id)=problem.title
+    h1='Test Case ' + test_case.id
+    a(href='/crud/test-cases/' + test_case.id + '/edit')='edit'
+
+    h2 Input
+    pre=test_case.input
+
+    h2 Output
+    p='Types: ' + test_case.types
+    pre=test_case.output

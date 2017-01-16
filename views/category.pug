@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    a(href='/crud/categories')= 'up'
+    h1= category.name
+    a(href='/crud/categories/' + id + '/edit')='edit'
+    p= category.description
+
+    h2 Problems
+    a(href='/crud/categories/' + id + '/problems/new')='new'
+    each problem in problems
+        h3
+            a(href='/crud/problems/' + problem.id)= problem.title

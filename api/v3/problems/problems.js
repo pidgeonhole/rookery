@@ -1,6 +1,7 @@
 "use strict";
 
 const debug = require('debug')('rookery:api/v3/problems');
+const owl = require('../lib/owl');
 
 const Problem = require('../types/Problem');
 
