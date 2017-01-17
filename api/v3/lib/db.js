@@ -191,7 +191,7 @@ function newTestCases(test_cases) {
   try {
     insert = pgp.helpers.insert(test_cases, ['problem_id', 'input', 'output', 'types'], 'test_cases');
   } catch (e) {
-    return Promise.reject(e);
+    return Promise.reject('invalid data');
   }
 
   return db.result(insert);

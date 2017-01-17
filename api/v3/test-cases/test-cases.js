@@ -14,7 +14,7 @@ function newTestCase(db, req, res) {
 
     .catch(err => {
       debug(err);
-      res.sendStatus(500);
+      return res.sendStatus(500);
     });
 }
 
@@ -24,8 +24,12 @@ function newTestCases(db, req, res) {
   return db.newTestCases(new_test_cases)
     .then(_ => res.sendStatus(201))
     .catch(err => {
+      if (err === 'invalid data') {
+        return res.sendStatus(400);
+      }
+
       debug(err);
-      return res.sendStatus(400);
+      return res.sendStatus(500);
     });
 }
 
