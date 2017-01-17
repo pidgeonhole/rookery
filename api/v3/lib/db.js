@@ -185,6 +185,18 @@ function newTestCase(problem_id, input, output, types) {
     [problem_id, input, output, types]);
 }
 
+function newTestCases(test_cases) {
+  let insert;
+
+  try {
+    insert = pgp.helpers.insert(test_cases, ['problem_id', 'input', 'output', 'types'], 'test_cases');
+  } catch (e) {
+    return Promise.reject('invalid data');
+  }
+
+  return db.result(insert);
+}
+
 function newSubmission(problem_id, name, language, source_code) {
   return db.one(`
     INSERT INTO submissions (problem_id, name, language, source_code)
@@ -264,6 +276,7 @@ module.exports = {
   newCategory,
   newProblem,
   newTestCase,
+  newTestCases,
   newSubmission,
   newEvent,
   updateCategory,

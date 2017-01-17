@@ -22,6 +22,16 @@ router.get('/:id', (req, res) => test_cases.getTestCase(db, req, res));
 //   }
 // });
 
+router.post('/', (req, res) => {
+  const body = req.body;
+
+  if (Array.isArray(body)) {
+    return test_cases.newTestCases(db, req, res);
+  } else {
+    return test_cases.newTestCase(db, req, res);
+  }
+});
+
 router.put('/:id', (req, res) => test_cases.editTestCase(db, req, res));
 
 module.exports = router;
