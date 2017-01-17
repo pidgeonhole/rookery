@@ -5,7 +5,7 @@ const router = express.Router();
 
 const version = require('../../package.json').version;
 
-const login = require('./login/login');
+// const login = require('./login/login');
 const categories = require('./categories/router');
 const problems = require('./problems/router');
 const test_cases = require('./test-cases/router');
@@ -16,7 +16,7 @@ const test_cases = require('./test-cases/router');
 //   next();
 // });
 
-router.use('/login', login);
+// router.use('/login', login);
 router.use('/categories', categories);
 router.use('/problems', problems);
 router.use('/test-cases', test_cases);
